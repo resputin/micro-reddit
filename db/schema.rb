@@ -10,11 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209171003) do
+ActiveRecord::Schema.define(version: 20171210185036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pgcrypto"
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body", null: false
+    t.string "commentable_type"
+    t.bigint "commentable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "posts", force: :cascade do |t|
     t.string "title", null: false
@@ -31,5 +42,6 @@ ActiveRecord::Schema.define(version: 20171209171003) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "comments", "users"
   add_foreign_key "posts", "users"
 end
